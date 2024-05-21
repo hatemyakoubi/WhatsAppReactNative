@@ -11,7 +11,7 @@ import {
 } from "react-native";
 //import storage from '@react-native-firebase/storage';
 import firebase from "../../Config";
-import { get } from "firebase/database";
+import { get, set } from "firebase/database";
 const database = firebase.database();
 
 export default function MyProfile(props) {
@@ -22,6 +22,7 @@ export default function MyProfile(props) {
   const [Telephone, setTelephone] = useState("");
   const [Pseudo, setPseudo] = useState("");
   const [urlImage, setUrlImage] = useState(null);
+  const [Connected, setConnected] = useState("");
 
 
   const existProfile = async () =>{
@@ -35,6 +36,7 @@ export default function MyProfile(props) {
         setPrenom(ps.Prenom)
         setTelephone(ps.Telephone)
         setPseudo(ps.Pseudo)
+        setConnected(ps.Connected)
       }
     } catch (error) {
       console.log(error)
@@ -157,7 +159,8 @@ export default function MyProfile(props) {
               Prenom,
               Telephone,
               Pseudo,
-              url: null
+              url: null,
+              Connected: true
             }).then(() => {
               alert("Profile saved")
             }).catch((error) => {
@@ -189,6 +192,50 @@ export default function MyProfile(props) {
           }}
         >
           Save
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          firebase.auth().signOut();
+          const refe = database.ref('listProfile');
+          try {
+            const snapshot = await refe.get()
+            if(snapshot.exists()){
+              const existingContactKey = Object.keys(snapshot.val())[0];
+              const existingContactRef = database.ref(`listProfile/${existingContactKey}`);
+              set(existingContactRef,{
+                Connected: false
+              })
+              props.navigation.navigate("Authentification");
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        }}
+        disabled={false}
+        activeOpacity={0.5}
+        underlayColor="#DDDDDD"
+        style={{
+          marginBottom: 10,
+          backgroundColor: "#4682a0",
+          textstyle: "italic",
+          fontSize: 24,
+          height: 40,
+          width: "50%",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: 5,
+          marginTop: 20,
+        }}
+      >
+        <Text
+          style={{
+            color: "white",
+            fontSize: 16,
+            fontWeight: "bold",
+          }}
+        >
+          Logout
         </Text>
       </TouchableOpacity>
     </ImageBackground>

@@ -118,6 +118,7 @@ export default function Chat(props) {
             width: "85%",
             marginRight: 10,
           }}
+          value={msg}
         ></TextInput>
         <TouchableHighlight
           onPress={() => {
@@ -130,6 +131,7 @@ export default function Chat(props) {
               Sender: currentid,
               Receiver: secondid,
             });
+            setmsg("")
           }}
         >
           <Image

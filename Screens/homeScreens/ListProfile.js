@@ -80,6 +80,15 @@ export default function ListProfils(props) {
                 ></Image>
               </TouchableOpacity>
               <Text>{item.Pseudo}</Text>
+              <View
+                style={{
+                  height: 10,
+                  width: 10,
+                  backgroundColor: item.Connected ? "green" : "red",
+                  borderRadius: 5,
+                  marginLeft: 10,
+                }}
+              ></View>
             </View>
           );
         }}
